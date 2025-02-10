@@ -1,0 +1,13 @@
+{
+    "builds": [{
+      "src": "bangla_blogging/wsgi.py",
+      "use": "@vercel/python",
+      "config": { "maxLambdaSize": "15mb", "runtime": "python3.11.3" }
+    }],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "bangla_blogging/wsgi.py"
+      }
+    ]
+}

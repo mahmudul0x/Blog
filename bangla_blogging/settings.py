@@ -30,12 +30,13 @@ SECRET_KEY = 'django-insecure-&u35%xg9nzjfy2m%b2m0fvxjki55_6i@8%5f(3))v32(^if(qz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", ".vercel.app"]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    "whitenoise.runserver_nostatic",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -57,6 +58,7 @@ CORS_ALLOWED_ORIGINS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -84,7 +86,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'bangla_blogging.wsgi.application'
+WSGI_APPLICATION = 'bangla_blogging.wsgi.app'
 LANGUAGE_CODE = 'bn'
 TIME_ZONE = 'Asia/Dhaka'  # Adjust according to your timezone preference
 
@@ -98,12 +100,32 @@ REST_FRAMEWORK = {
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+import psycopg2
+from dotenv import load_dotenv
+import os
+import dj_database_url  # Install this if you haven't: pip install dj-database-url
+
+import environ
+
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres.nvzxaqbpugxoakkglffm',
+        'PASSWORD': 'nCe3yUPb4J9oxmFN',
+        'HOST': 'aws-0-us-west-1.pooler.supabase.com',
+        'PORT': '6543',
     }
 }
+
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
@@ -152,6 +174,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
