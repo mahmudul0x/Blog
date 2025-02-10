@@ -322,7 +322,7 @@ class MediaItemDetailView(generics.RetrieveUpdateDestroyAPIView):
         self.perform_destroy(instance)
         return Response({"message": "Media item deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
     
-from googleapiclient.discovery import build
+# from googleapiclient.discovery import build
 from django.conf import settings
 from rest_framework import generics
 from rest_framework.views import APIView
@@ -333,38 +333,84 @@ from .serializers import MediaCardSerializer
 
 
 # Initialize the YouTube API client
-def get_youtube_service():
-    api_key = settings.YOUTUBE_API_KEY  # Retrieve the API key from settings
-    return build('youtube', 'v3', developerKey=api_key)
+# def get_youtube_service():
+#     api_key = settings.YOUTUBE_API_KEY  
+#     return build('youtube', 'v3', developerKey=api_key)
+
+# এখানে নিউ এড করা হইচে 
 
 # Fetch videos from a YouTube playlist
-def get_playlist_videos(playlist_id):
-    youtube = get_youtube_service()
+# def get_playlist_videos(playlist_id):
+#     youtube = get_youtube_service()
     
-    # Request to fetch playlist items
-    request = youtube.playlistItems().list(
-        part='snippet',
-        playlistId=playlist_id,
-        maxResults=50  # Max number of results to fetch (you can adjust this)
-    )
-    response = request.execute()
+#     # Request to fetch playlist items
+#     request = youtube.playlistItems().list(
+#         part='snippet',
+#         playlistId=playlist_id,
+#         maxResults=50  # Max number of results to fetch (you can adjust this)
+#     )
+#     response = request.execute()
+    
+#     videos = []
+#     for item in response['items']:
+#         video_id = item['snippet']['resourceId']['videoId']
+#         title = item['snippet']['title']
+#         description = item['snippet']['description']
+#         thumbnail = item['snippet']['thumbnails']['high']['url']
+        
+#         videos.append({
+#             'video_id': video_id,
+#             'title': title,
+#             'description': description,
+#             'thumbnail': thumbnail,
+#             'url': f'https://www.youtube.com/watch?v={video_id}'
+#         })
+    
+#     return videos
+
+import requests
+from django.conf import settings
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from django.http import JsonResponse
+
+# Fetch videos from a YouTube playlist without using googleapiclient
+def get_playlist_videos(playlist_id):
+    api_key = settings.YOUTUBE_API_KEY  # Retrieve the API key from settings
+    url = f"https://www.googleapis.com/youtube/v3/playlistItems"
+    
+    params = {
+        "part": "snippet",
+        "playlistId": playlist_id,
+        "maxResults": 50,
+        "key": api_key
+    }
+    
+    response = requests.get(url, params=params)
+    if response.status_code != 200:
+        return {"error": "Failed to fetch videos"}
+    
+    data = response.json()
     
     videos = []
-    for item in response['items']:
-        video_id = item['snippet']['resourceId']['videoId']
-        title = item['snippet']['title']
-        description = item['snippet']['description']
-        thumbnail = item['snippet']['thumbnails']['high']['url']
-        
+    for item in data.get("items", []):
+        snippet = item.get("snippet", {})
+        video_id = snippet.get("resourceId", {}).get("videoId", "")
+        title = snippet.get("title", "No Title")
+        description = snippet.get("description", "No Description")
+        thumbnail = snippet.get("thumbnails", {}).get("high", {}).get("url", "")
+
         videos.append({
-            'video_id': video_id,
-            'title': title,
-            'description': description,
-            'thumbnail': thumbnail,
-            'url': f'https://www.youtube.com/watch?v={video_id}'
+            "video_id": video_id,
+            "title": title,
+            "description": description,
+            "thumbnail": thumbnail,
+            "url": f"https://www.youtube.com/watch?v={video_id}"
         })
     
     return videos
+
+
 
 # MediaCard List and Create API using generics
 class MediaCardListCreateAPIView(generics.ListCreateAPIView):

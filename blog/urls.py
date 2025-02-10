@@ -1,6 +1,6 @@
 # urls.py
 from django.urls import path
-from .views import BlogListCreateAPIView, BlogDetailAPIView,CategoryListCreateAPIView, TagListCreateAPIView, BlogSearchAPIView, BlogReactionAPIView,BlogByCategoryAPIView, BlogSubmissionListCreateAPIView,MediaItemListCreateView,MediaItemDetailView,MediaCardListCreateAPIView, PlaylistVideoListAPIView,DashboardAPIView
+from .views import BlogListCreateAPIView, BlogDetailAPIView,CategoryListCreateAPIView, TagListCreateAPIView, BlogSearchAPIView, BlogReactionAPIView,BlogByCategoryAPIView, BlogSubmissionListCreateAPIView,MediaCardListCreateAPIView, PlaylistVideoListAPIView,DashboardAPIView
 
 urlpatterns = [
     path('blogs/', BlogListCreateAPIView.as_view(), name='blog-list-create'),
