@@ -50,11 +50,17 @@ INSTALLED_APPS = [
     'blog',
     'users',
 ]
+CORS_ALLOW_ALL_ORIGINS = True
+
 CORS_ALLOWED_ORIGINS = [
+    'https://porokal.netlify.app',
     'http://127.0.0.1:5500',
     'http://127.0.0.1:8000',
     'http://127.0.0.1:5501',
+    'https://porokaldsbd.netlify.app',
 ]
+
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
