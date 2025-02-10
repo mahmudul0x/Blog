@@ -1,26 +1,14 @@
 {
-    "builds": [
-      {
-        "src": "bangla_blogging/wsgi.py",
-        "use": "@vercel/python",
-        "config": { 
-          "maxLambdaSize": "15mb", 
-          "runtime": "python3.11.3" 
-        }
-      }
-    ],
+    "builds": [{
+      "src": "bangla_blogging/wsgi.py",
+      "use": "@vercel/python",
+      "config": { "maxLambdaSize": "15mb", "runtime": "python3.11.3" }
+    }],
     "routes": [
       {
         "src": "/(.*)",
         "dest": "bangla_blogging/wsgi.py"
       }
-    ],
-    "functions": {
-      "api/*.py": {
-        "runtime": "vercel-python@4.0.0",
-        "maxDuration": 10,
-        "memory": 512
-      }
-    }
-  }
-  
+    ]
+}
+
